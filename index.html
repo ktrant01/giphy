@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Giphy HW</title>
+  <link rel="stylesheet" href="assets/css/reset.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+
+<body>
+        <div class="container">
+                <div class="row ">
+                        <div id="buttons" class="col-lg-10 text-center bg-dark text-white">
+                        </div>
+
+                <div class="row ">   
+                        <div id="display" class="col-lg-7 bg-dark text-white">
+                        <div id="display" class="col-lg-3  bg-dark text-white">
+                                <form>
+                                        <input type="text">
+                                    
+                                        <button class=newItem>add item</button>
+                                    </form>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- <div id=buttons></div> -->
+
+
+
+<!-- <div id=display></div> -->
+
+
+  <!-- Added link to the jQuery Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+  
+var emotions = ["acute", "agonizing", "bad", "burning", "chapped", "chronic", "dull", "excruciating", "gnawing", "inflamed", "painful", "heavy", "severe", "stabbing", "sharp", "vicelike"]
+
+
+function populateButton(){
+for (key in emotions){
+    var button = $('<button>').text(emotions[key]).attr('class', 'selection')
+    $('#buttons').append(button)
+
+    console.log(emotions[key])
+}
+}
+populateButton()
+
+
+
+$(document).on('click', '.selection',  function(){
+//   event.preventDefault();
+
+  var this_button = $(this)
+  var selection = this_button.text();
+  var url =     "https://api.giphy.com/v1/gifs/search?q=" + selection + "&api_key=dc6zaTOxFJmzC&limit=10";
+      console.log(url)
+      
+      $.ajax({
+      url: url
+      }).then(function(res) {
+        // debugger
+           var randomImage = res.data
+
+              for (key in randomImage){
+              console.log(randomImage[key].images.fixed_width_small.url)
+
+              var image = $('<img>')
+              var p = $('<p>')
+              var rating = res.data[0].rating
+              p.text("Rating: " + rating.toUpperCase() )
+              image.attr('src', randomImage[key].images.downsized_medium.url)
+              $('#display').append(p, image)
+              }
+        })
+})
+
+
+
+$('.newItem').on('click', function(){
+    event.preventDefault();
+		var input_value = $('input').val();
+		emotions.push(input_value);
+        var button = $('<button>').text(input_value).attr('class', 'selection')
+        $('#buttons').append(button)
+
+})
+</script>
+
+</body>
+
+</html>
